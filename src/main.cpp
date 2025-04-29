@@ -3,15 +3,15 @@
 #include <iostream>
 #include <thread>
 #include <chrono>
-
+#include "snake.hpp"
 int main(int argc, char* argv[]) {
+    Snake snake;
+    snake.print_gamearea();
     auto app = Gtk::Application::create("org.snake.menu");
 
     AppWindow window;
-    app->hold();
+    app->hold(); 
     window.show();
     std::this_thread::sleep_for(std::chrono::milliseconds(50));
-    window.maximize();
-    
-    return app->run(argc, argv);
+    return app->run(argc, argv); 
 }
