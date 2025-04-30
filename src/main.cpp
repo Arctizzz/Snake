@@ -5,9 +5,7 @@
 #include <chrono>
 #include "snake.hpp"
 int main(int argc, char* argv[]) {
-    Snake snake;
-    snake.print_gamearea();
-    auto app = Gtk::Application::create("org.snake.menu");
+auto app = Gtk::Application::create("org.snake.menu");
 
     AppWindow window;
     app->hold(); 

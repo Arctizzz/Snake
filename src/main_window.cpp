@@ -4,8 +4,6 @@
 #include <iostream>
 #include <gdk/gdkkeysyms.h>
 #include <gtkmm/applicationwindow.h>
-#include "snake.hpp"
-
 AppWindow::AppWindow()
 : stack(), menu(), game() {
     set_title("Snake Game");
@@ -31,6 +29,10 @@ AppWindow::AppWindow()
 
 void AppWindow::on_start_game() {
     stack.set_visible_child("game");
+    Glib::signal_timeout().connect(
+        sigc::mem_fun(*this, &AppWindow::on_game_tick),
+        5000
+    );
 }
 std::pair<int, int> AppWindow::get_window_size() {
     int width, height;
@@ -74,4 +76,10 @@ return false;
 bool AppWindow::on_close() {
     exit(0);
     return false;
+}
+
+bool AppWindow::on_game_tick() {
+    game.tick();
+    game.queue_draw();
+    return true;
 }

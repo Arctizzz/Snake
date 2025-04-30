@@ -2,9 +2,11 @@
 #include <iostream>
 #include <cmath> 
 #include <main_window.hpp>
+#include "snake.hpp"
 int screen_width = 0;
 int screen_height = 0;
     Game::Game() {
+        snake.init_snake();
         set_draw_func(sigc::mem_fun(*this, &Game::on_draw));
         set_window_size(screen_width, screen_height);
 
@@ -35,9 +37,12 @@ int screen_height = 0;
             }
     }
 }
-    void Game::set_window_size(int width, int height){
+void Game::set_window_size(int width, int height){
         screen_width = width;
         screen_height = height;
     }
-    
+
+void Game::tick() {
+    snake.domovement();
+}
 

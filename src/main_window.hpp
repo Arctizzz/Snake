@@ -3,7 +3,6 @@
 #include "menu.hpp"
 #include "game.hpp"
 #include <utility>
-
 class AppWindow : public Gtk::Window {
 public:
     AppWindow();
@@ -18,4 +17,5 @@ private:
     void on_start_game();
     bool on_key_press(guint keyval, guint keycode, Gdk::ModifierType state);
     bool on_close();
+    bool on_game_tick();
 };
