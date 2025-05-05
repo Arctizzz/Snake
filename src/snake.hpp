@@ -24,11 +24,11 @@ class Snake  {
     void generate_apple(); //done
     void delete_tail(); //done
     void add_head(int newx, int newy); //done
+    void set_body(int headx, int heady);
     DIRECTION direction = RIGHT;
     private:
     SnakeSegment* head = nullptr;
     SnakeSegment* tail = nullptr;
-    int SnakeLength = 0;
     static const int cols = 20;
     static const int rows = 20;
     int Gamearea[rows][cols];

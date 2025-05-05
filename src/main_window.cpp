@@ -31,7 +31,7 @@ void AppWindow::on_start_game() {
     stack.set_visible_child("game");
     Glib::signal_timeout().connect(
         sigc::mem_fun(*this, &AppWindow::on_game_tick),
-        5000
+        2000
     );
 }
 std::pair<int, int> AppWindow::get_window_size() {
