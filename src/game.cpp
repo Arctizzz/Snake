@@ -24,11 +24,15 @@ int screen_height = 0;
         for(int row = 0; row < rows; row++){
             for(int col = 0; col < cols; col++){
                 bool is_light = (row + col) % 2 == 0;
-
-                if(is_light)
-                    cr->set_source_rgb(0/255.0, 204.0/255.0, 86.0/255.0);
+                const int (&snake_tiles)[Snake::rows][Snake::cols] = snake.get_current_gamearea();
+                if(snake_tiles[row][col] == 3 or snake_tiles[row][col] == 2)
+                    cr->set_source_rgb(0, 0, 0);
+                else if(snake_tiles[row][col] == 1)
+                    cr->set_source_rgb(255.0, 0, 0);
+                else if(is_light)
+                    cr->set_source_rgb(170.0/255, 215.0/255, 81.0/255);
                 else
-                    cr->set_source_rgb(0, 128.0/255.0, 0);
+                    cr->set_source_rgb(162.0/255, 209.0/255, 73.0/255);
 
                 double x = col * cell_width;
                 double y = row * cell_height;
@@ -36,6 +40,24 @@ int screen_height = 0;
                 cr->fill();
             }
     }
+cr->set_source_rgb(0.4, 0.4, 0.4); 
+
+cr->set_line_width(0.7);
+
+for (int col = 0; col <= cols; ++col) {
+    double x = col * cell_width;
+    cr->move_to(x, 0);
+    cr->line_to(x, screen_height);
+}
+
+for (int row = 0; row <= rows; ++row) {
+    double y = row * cell_height;
+    cr->move_to(0, y);
+    cr->line_to(screen_width, y);
+}
+
+cr->stroke(); 
+
 }
 void Game::set_window_size(int width, int height){
         screen_width = width;
@@ -45,4 +67,12 @@ void Game::set_window_size(int width, int height){
 void Game::tick() {
     snake.domovement();
 }
-
+void Game::set_direction(DIRECTION dir) {
+    std::cout << "Direction set to: " << dir << std::endl;
+    switch (dir) {
+        case UP:    snake.set_direction_up(); break;
+        case DOWN:  snake.set_direction_down(); break;
+        case LEFT:  snake.set_direction_left(); break;
+        case RIGHT: snake.set_direction_right(); break;
+    }
+}

@@ -1,6 +1,7 @@
 #include "main_window.hpp"
 #include "menu.hpp"
 #include "game.hpp"
+#include "snake.hpp"
 #include <iostream>
 #include <gdk/gdkkeysyms.h>
 #include <gtkmm/applicationwindow.h>
@@ -31,7 +32,7 @@ void AppWindow::on_start_game() {
     stack.set_visible_child("game");
     Glib::signal_timeout().connect(
         sigc::mem_fun(*this, &AppWindow::on_game_tick),
-        2000
+        500
     );
 }
 std::pair<int, int> AppWindow::get_window_size() {
@@ -60,17 +61,43 @@ void AppWindow::layout_functions() {
     game.queue_draw(); // redraw window as last step to make sure it all works properly
 }
 bool AppWindow::on_key_press(guint keyval, guint keycode, Gdk::ModifierType state) {
-    if (keyval == GDK_KEY_Escape) {
-        if(property_fullscreened() == true) {
-            unfullscreen();
-        }
-        else {
-            fullscreen();
-        }
+    switch (keyval) {
+
+    case GDK_KEY_Escape:
+    if(property_fullscreened() == true) {
+        unfullscreen();
+    }
+    else {
+        fullscreen();
+    }
     return true; 
+    break;
+    case GDK_KEY_W:
+    case GDK_KEY_w:
+        g_print("W KEY PRESSED\n");
+        game.set_direction(UP);
+        return true; 
+    break;
+    case GDK_KEY_A:
+    case GDK_KEY_a:
+        g_print("A KEY PRESSED\n");
+        game.set_direction(LEFT);
+        return true; 
+    break;
+    case GDK_KEY_S:
+    case GDK_KEY_s:
+        g_print("S KEY PRESSED\n");
+        game.set_direction(DOWN);
+        return true;
+    break;
+    case GDK_KEY_D:
+    case GDK_KEY_d:
+        g_print("D KEY PRESSED\n");
+        game.set_direction(RIGHT);
+        return true; 
+    break;
 }
 return false; 
-
 }
 
 bool AppWindow::on_close() {

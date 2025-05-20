@@ -14,7 +14,7 @@ for(int col = 0;col < cols; col++) {
         Gamearea[row][col] = 0;
     }
 }
-
+direction = RIGHT;
 }
 void Snake::print_gamearea() {
     for (int row = 0; row < rows; row++) {
@@ -28,17 +28,20 @@ void Snake::domovement() {
 int HeadX = head->xpos;
 int HeadY = head->ypos;
     set_body(HeadX, HeadY);
-    switch (direction)
-    {
-    case UP:    HeadY += 1; break;
-    case DOWN:  HeadY -= 1; break;
+    switch (direction) {
+    case UP:    HeadY -= 1; break;
+    case DOWN:  HeadY += 1; break;
     case LEFT:  HeadX -= 1; break;
     case RIGHT: HeadX += 1; break;
     }
+    bool ate_apple = (Gamearea[HeadY][HeadX] == APPLE);
+    if (ate_apple) {
+        generate_apple();
+    }
+    has_hit_itself(HeadX, HeadY);
     add_head(HeadX, HeadY);
-    delete_tail();
+    delete_tail(ate_apple);
     has_hit_wall();
-    has_hit_itself();
     print_gamearea();
 }
 void Snake::init_snake() {
@@ -54,6 +57,7 @@ void Snake::init_snake() {
     Gamearea[10][10] = SNAKE;
     Gamearea[10][11] = SNAKE;
     Gamearea[10][12] = HEAD;
+    generate_apple();
     print_gamearea();
 }
 
@@ -78,32 +82,21 @@ void Snake::add_head(int NewX, int NewY) {
 
 }
 void Snake::set_body(int HeadX, int HeadY) {
-    Gamearea[HeadY][HeadX] = SNAKE;
+        Gamearea[HeadY][HeadX] = SNAKE;
 }
-void Snake::delete_tail(){
+void Snake::delete_tail(bool skip_deletion){
+    if(skip_deletion) {
+        return;
+    }
     SnakeSegment* current = head;
     while(current->next != tail){
         current = current->next;
     }
-if(has_hit_apple() == false) {
     Gamearea[tail->ypos][tail->xpos] = EMPTY;
     delete tail;
     tail = current;
     tail->next = nullptr;
     Gamearea[tail->ypos][tail->xpos] = SNAKE;
-}
-}
-bool Snake::has_hit_apple() {
-    int HeadX = head->xpos;
-    int HeadY = head->ypos;
-
-    if(Gamearea[HeadY][HeadX] == APPLE) {
-        generate_apple();
-        return true;
-    }
-    else {
-        return false;
-    }
 }
 void Snake::has_hit_wall() {
     int HeadX = head->xpos;
@@ -113,14 +106,39 @@ void Snake::has_hit_wall() {
     }
 }
 
-void Snake::has_hit_itself() {
-    int HeadX = head->xpos;
-    int HeadY = head->ypos;
+void Snake::has_hit_itself(int HeadX, int HeadY) {
     if(Gamearea[HeadY][HeadX] == SNAKE){
-        game_over();
+    std::cout << "Game over hit itself" << std::endl;
+       game_over();
     }
 }
 void Snake::game_over(){
     std::cout<<"Game Over!"<<std::endl;
     exit(1);
+}
+void Snake::set_direction_right(){
+    if(direction != LEFT) {
+    direction = RIGHT;
+    }
+}
+void Snake::set_direction_left(){
+    if(direction != RIGHT) {
+    direction = LEFT;
+    }
+}
+void Snake::set_direction_up(){
+    if(direction != DOWN){
+    direction = UP;
+    }
+}
+void Snake::set_direction_down(){
+    if(direction != UP) {
+    direction = DOWN;
+    }
+}
+const int (&Snake::get_current_gamearea() const)[rows][cols] {
+    return Gamearea;
+}
+DIRECTION Snake::get_direction() {
+    return direction;
 }

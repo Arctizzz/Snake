@@ -8,7 +8,7 @@ Snake snake;
     Game();
     void set_window_size(int width, int height);
     void tick();
-
+    void set_direction(DIRECTION dir);
 private:
 void on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height);
 int cols = 20;

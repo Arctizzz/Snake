@@ -2,6 +2,7 @@
 #include <gtkmm.h>
 #include "menu.hpp"
 #include "game.hpp"
+#include "snake.hpp"
 #include <utility>
 class AppWindow : public Gtk::Window {
 public:
@@ -13,6 +14,7 @@ private:
     Gtk::Stack stack;
     Menu menu;
     Game game;
+    Snake snake;
     void layout_functions();
     void on_start_game();
     bool on_key_press(guint keyval, guint keycode, Gdk::ModifierType state);
