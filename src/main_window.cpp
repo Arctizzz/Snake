@@ -2,11 +2,13 @@
 #include "menu.hpp"
 #include "game.hpp"
 #include "snake.hpp"
+#include "settings.hpp"
 #include <iostream>
 #include <gdk/gdkkeysyms.h>
 #include <gtkmm/applicationwindow.h>
+bool movementdone = false;
 AppWindow::AppWindow()
-: stack(), menu(), game() {
+: stack(), menu(), game(), settings() {
     set_title("Snake Game");
     set_default_size(500, 500);
     set_resizable(true);
@@ -24,15 +26,23 @@ AppWindow::AppWindow()
     signal_realize().connect(sigc::mem_fun(*this, &AppWindow::layout_functions));
     key_controller->signal_key_pressed().connect(sigc::mem_fun(*this, &AppWindow::on_key_press), false);
     menu.on_start_game.connect(sigc::mem_fun(*this, &AppWindow::on_start_game));
+    settings.on_open_settings.connect(sigc::mem_fun(*this, &AppWindow::on_open_settings));
+    settings.return_to_menu.connect(sigc::mem_fun(*this, &AppWindow::on_return_to_menu));
     stack.set_visible_child("menu");
     signal_close_request().connect(sigc::mem_fun(*this, &AppWindow::on_close), false);
 }
-
+void AppWindow::on_open_settings() {
+    stack.set_visible_child("settings");
+}
+void AppWindow::on_return_to_menu() {
+    stack.set_visible_child("menu");
+}
 void AppWindow::on_start_game() {
+    int game_speed = settings.get_game_speed();
     stack.set_visible_child("game");
     Glib::signal_timeout().connect(
         sigc::mem_fun(*this, &AppWindow::on_game_tick),
-        500
+        game_speed
     );
 }
 std::pair<int, int> AppWindow::get_window_size() {
@@ -75,25 +85,37 @@ bool AppWindow::on_key_press(guint keyval, guint keycode, Gdk::ModifierType stat
     case GDK_KEY_W:
     case GDK_KEY_w:
         g_print("W KEY PRESSED\n");
+        if (movement_done == false) {
         game.set_direction(UP);
+        movement_done = true;
+        }
         return true; 
     break;
     case GDK_KEY_A:
     case GDK_KEY_a:
         g_print("A KEY PRESSED\n");
+        if (movement_done == false) {
         game.set_direction(LEFT);
+        movement_done = true;
+        }
         return true; 
     break;
     case GDK_KEY_S:
     case GDK_KEY_s:
         g_print("S KEY PRESSED\n");
+        if (movement_done == false) {
         game.set_direction(DOWN);
+        movement_done = true;
+        }
         return true;
     break;
     case GDK_KEY_D:
     case GDK_KEY_d:
         g_print("D KEY PRESSED\n");
+        if (movement_done == false) {
         game.set_direction(RIGHT);
+        movement_done = true;
+        }
         return true; 
     break;
 }
@@ -106,6 +128,7 @@ bool AppWindow::on_close() {
 }
 
 bool AppWindow::on_game_tick() {
+    movement_done = false;
     game.tick();
     game.queue_draw();
     return true;

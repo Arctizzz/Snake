@@ -92,12 +92,6 @@ void Menu::start_game() {
     std::cout << "Game started!" << std::endl;
     on_start_game.emit();
 }
-
-void Menu::open_settings() {
-    std::cout << "Settings opened!" << std::endl;
-    on_start_game.emit();  // Temporary for now
-}
-
 void Menu::exit_game() {
     std::exit(1);
 }
